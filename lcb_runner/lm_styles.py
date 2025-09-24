@@ -34,6 +34,8 @@ class LMStyle(Enum):
 
     TogetherAI = "TogetherAI"
 
+    Giga = "Giga"
+
 
 @dataclass
 class LanguageModel:
@@ -862,6 +864,15 @@ LanguageModelList: list[LanguageModel] = [
         "https://huggingface.co/agentica-org/DeepCoder-14B-Preview",
     ),
 ]
+
+GIGA_MODEL = LanguageModel(
+    "<PLACEHOLDER>",
+    "<PLACEHOLDER>",
+    LMStyle.Giga,
+    datetime.now(),
+    link="https://giga.chat/"
+)
+
 
 LanguageModelStore: dict[str, LanguageModel] = {
     lm.model_name: lm for lm in LanguageModelList
