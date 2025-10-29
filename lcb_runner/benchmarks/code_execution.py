@@ -3,7 +3,19 @@ from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
 
-from datasets import load_dataset
+from datasets import load_dataset, __version__ as datasets_version
+
+
+def _ensure_supported_datasets_version():
+    try:
+        major = int(datasets_version.split(".")[0])
+    except Exception:
+        major = 3
+    if major >= 3:
+        raise RuntimeError(
+            "HuggingFace datasets>=3.0 is not supported by LiveCodeBench loaders. "
+            "Please install 'datasets<3.0' (e.g., pip install 'datasets<3')."
+        )
 
 
 @dataclass
@@ -57,6 +69,7 @@ class CodeExecutionProblem:
 
 
 def load_code_execution_dataset(release_version="release_v1") -> list[CodeExecutionProblem]:
+    _ensure_supported_datasets_version()
     dataset = load_dataset("livecodebench/execution-v2", split="test")
     dataset = [CodeExecutionProblem(**p) for p in dataset]  # type: ignore
     print(f"Loaded {len(dataset)} problems")

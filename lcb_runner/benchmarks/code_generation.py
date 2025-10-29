@@ -6,7 +6,19 @@ from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
 
-from datasets import load_dataset
+from datasets import load_dataset, __version__ as datasets_version
+
+
+def _ensure_supported_datasets_version():
+    try:
+        major = int(datasets_version.split(".")[0])
+    except Exception:
+        major = 3  # be safe: treat unknown as unsupported
+    if major >= 3:
+        raise RuntimeError(
+            "HuggingFace datasets>=3.0 is not supported by LiveCodeBench loaders. "
+            "Please install 'datasets<3.0' (e.g., pip install 'datasets<3')."
+        )
 
 
 class Platform(Enum):
@@ -121,7 +133,9 @@ class CodeGenerationProblem:
         }
 
 
+
 def load_code_generation_dataset(release_version="release_v1", start_date=None, end_date=None) -> list[CodeGenerationProblem]:
+    _ensure_supported_datasets_version()
     dataset = load_dataset("livecodebench/code_generation_lite", split="test", version_tag=release_version, trust_remote_code=True)
     dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
     if start_date is not None:
@@ -137,6 +151,7 @@ def load_code_generation_dataset(release_version="release_v1", start_date=None, 
 
 
 def load_code_generation_dataset_not_fast(release_version="release_v1") -> list[CodeGenerationProblem]:
+    _ensure_supported_datasets_version()
     dataset = load_dataset("livecodebench/code_generation", split="test")
     dataset = [CodeGenerationProblem(**p) for p in dataset]  # type: ignore
     print(f"Loaded {len(dataset)} problems")
