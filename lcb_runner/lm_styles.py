@@ -1,6 +1,11 @@
+import os
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+
+MODEL = os.getenv("BENCHMARK_MODEL")
+assert MODEL is not None, "Set env `BENCHMARK_MODEL` is not set"
+MODEL_PRETTY = MODEL.replace("/", "-")
 
 
 class LMStyle(Enum):
@@ -134,7 +139,7 @@ LanguageModelList: list[LanguageModel] = [
         link="https://huggingface.co/meta-llama/Llama-3.1-405B-Instruct-FP8",
     ),
     ## LLama3.3 Instruct (8B, 70B)
-    # LanguageModel( 
+    # LanguageModel(
     #     "meta-llama/Llama-3.3-8B-Instruct", # Has been removed from HuggingFace by meta-llama
     #     "LLama3.3-8b-Ins",
     #     LMStyle.LLaMa3,
@@ -288,6 +293,13 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.OpenAIChat,
         datetime(2023, 4, 30),
         link="https://openai.com/index/spring-update",
+    ),
+    LanguageModel(
+        MODEL,
+        MODEL_PRETTY,
+        LMStyle.OpenAIChat,
+        datetime(2026, 1, 1),
+        link="https://xui.com/index/what-about-some-xui-v-zhope",
     ),
     ## O1-Mini and O1-Preview
     LanguageModel(
@@ -870,7 +882,7 @@ GIGA_MODEL = LanguageModel(
     "<PLACEHOLDER>",
     LMStyle.Giga,
     datetime.now(),
-    link="https://giga.chat/"
+    link="https://giga.chat/",
 )
 
 

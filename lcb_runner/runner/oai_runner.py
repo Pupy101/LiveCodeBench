@@ -41,7 +41,7 @@ class OpenAIRunner(BaseRunner):
                 "frequency_penalty": 0,
                 "presence_penalty": 0,
                 "n": args.n,
-                "timeout": args.openai_timeout,
+                "timeout": max(args.openai_timeout or 100, 1_000),
                 # "stop": args.stop, --> stop is only used for base models currently
             }
 
